@@ -1,6 +1,22 @@
 'use strict';
 
-let money, time
+let startBtn = document.getElementById('start'),
+    valueClasses = document.querySelectorAll('[class*="value"]'),
+    expensesItemInput = document.getElementsByClassName('.expenses-item'),
+    expensesItemBtn = document.getElementsByTagName('button')[0],
+    optionalExpensesBtn = document.getElementsByTagName('button')[1],
+    countBudgetBtn = document.getElementsByTagName('button')[2],
+    optionalExpensesInput = document.querySelectorAll('.optionalexpenses-item'),
+    chooseIncomeInput = document.querySelector('.choose-income'),
+    checkSavingsCheckbox = document.querySelector('#savings'),
+    chooseSumInput = document.querySelector('.choose-sum'),
+    choosePercentInput = document.querySelector('.choose-percent'),
+    yearValueInput = document.querySelector('.year-value'),
+    monthValueInput = document.querySelector('.month-value'),
+    dayValueInput = document.querySelector('.day-value');
+
+
+let money, time;
 
 
 // спрашивает бюджет и месяц
