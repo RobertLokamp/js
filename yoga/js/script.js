@@ -94,9 +94,10 @@ window.addEventListener('DOMContentLoaded', function() {
         close = document.querySelector('.popup-close'),
         descriptionBtn = document.querySelector('.description-btn');
 
-    const openModal = function() {
+    function openModal() {
         overlay.style.display = 'block';
         this.classList.add('more-splash');
+        // отключаем скролл страницы при открытой модалке
         document.body.style.overflow = 'hidden';
     };
 
@@ -113,4 +114,120 @@ window.addEventListener('DOMContentLoaded', function() {
         more.classList.remove('more-splash');
         document.body.style.overflow = '';
     });
+
+    // Форма
+    let message = {
+        loading: 'Загрузка...',
+        success: 'Спасибо! Скоро мы с вами свяжемся!',
+        failure: 'Что-то пошло не так...'
+    };
+
+    let form = document.querySelector('.main-form'),
+        input = document.getElementsByTagName('input'),
+        statusMessage = document.createElement('div');
+
+    statusMessage.classList.add('status');
+
+    form.addEventListener('submit', function(event) {
+        // останавливаем перезагрузку страницы
+        event.preventDefault();
+
+        form.appendChild(statusMessage);
+
+        let request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        //  в случае если отправлять на сервер данные как есть 
+        // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        //  в случае если отправлять на сервер данные в виде json
+        request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+
+        let formData = new FormData(form);
+
+        // пребразование данных из формы в json
+        let obj = {};
+        formData.forEach(function(value, key) {
+            obj[key] = value;
+        });
+        let json = JSON.stringify(obj);
+
+        
+        request.send(json);
+
+        // выводим статус сообщение после отправки формы
+        request.addEventListener('readystatechange', function() {
+            if (request.readyState < 4) {
+                statusMessage.innerHTML = message.loading;
+            } else if (request.readyState === 4 && request.status == 200) {
+                statusMessage.innerHTML = message.success;
+            } else {
+                statusMessage.innerHTML = message.failure;
+            }
+
+            // очищаем форму после сабмита
+            for (let i = 0; i < input.length; i++) {
+                input[i].value = '';
+            }
+        });
+
+    });
+
+
+    /* TODO: надо доразобраться
+    // Контактная форма
+let message2 = {
+    loading: 'Загрузка...',
+    success: 'Спасибо! Скоро мы с вами свяжемся!',
+    failure: 'Что-то пошло не так...'
+};
+
+    let contactForm = document.getElementById('form');
+
+    //let statusMessage = document.createElement('div');
+    statusMessage.classList.add('status');
+
+    contactForm.addEventListener('submit', function(event) {
+        // останавливаем перезагрузку страницы
+        event.preventDefault();
+
+        contactForm.appendChild(statusMessage);
+
+        let request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        //  в случае если отправлять на сервер данные как есть 
+        // request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        //  в случае если отправлять на сервер данные в виде json
+        request.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+
+        let formData = new FormData(contactForm);
+
+        // пребразование данных из формы в json
+        let obj = {};
+        formData.forEach(function(value, key) {
+            obj[key] = value;
+        });
+        let json = JSON.stringify(obj);
+
+        
+        request.send(json);
+
+        // выводим статус сообщение после отправки формы
+        request.addEventListener('readystatechange', function() {
+            if (request.readyState < 4) {
+                statusMessage.innerHTML = message2.loading;
+            } else if (request.readyState === 4 && request.status == 200) {
+                statusMessage.innerHTML = message2.success;
+            } else {
+                statusMessage.innerHTML = message2.failure;
+            }
+
+            // очищаем форму после сабмита
+            for (let i = 0; i < input.length; i++) {
+                input[i].value = '';
+            }
+        });
+    });
+
+    */
 });
